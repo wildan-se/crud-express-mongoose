@@ -93,8 +93,8 @@ app.get(
 
 // Route untuk menampilkan form pembuatan produk baru untuk garment tertentu
 app.get("/garments/:garment_id/products/create", (req, res) => {
-  const { garment_id } = req.params; // Mendapatkan parameter garment_id dari URL
-  res.render("products/create", { garment_id }); // Render form untuk membuat produk baru untuk garment tertentu
+  const garment_id = req.params.garment_id;
+  res.render("products/create", { garment_id });
 });
 
 // Route untuk menambahkan produk baru ke garment tertentu
@@ -152,11 +152,22 @@ app.post(
 
 // Route untuk menampilkan detail produk berdasarkan ID
 app.get(
-  "/products/:id",
+  "/products/:id", // URL parameter ':id' menunjukkan ID unik produk yang diminta
   wrapAsync(async (req, res) => {
-    const { id } = req.params; // Mendapatkan parameter id dari URL
-    const product = await Product.findById(id).populate("garment"); // Mencari produk berdasarkan ID dan populate garment yang terkait
-    res.render("products/show", { product }); // Render halaman show.ejs untuk menampilkan detail produk
+    const { id } = req.params; // Mengambil nilai parameter 'id' dari URL dan menyimpannya dalam variabel 'id'
+
+    // Mencari produk berdasarkan ID di database dan mengisi (populate) properti 'garment'
+    // Ini akan membawa semua data terkait 'garment' ke dalam objek produk jika ada relasi
+    const product = await Product.findById(id).populate("garment");
+
+    // Jika produk tidak ditemukan, buat pesan flash dan redirect ke halaman daftar produk
+    if (!product) {
+      req.flash("flash_messages", "Produk tidak ditemukan"); // Mengatur pesan flash jika ID produk tidak valid
+      return res.redirect("/products"); // Redirect ke halaman daftar produk
+    }
+
+    // Jika produk ditemukan, render template 'show.ejs' di folder 'products' dengan data 'product'
+    res.render("products/show", { product });
   })
 );
 

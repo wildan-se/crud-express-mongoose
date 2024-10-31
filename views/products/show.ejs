@@ -34,10 +34,17 @@
           <%= product.category %>
         </a>
       </li>
-      <span class="font-semibold text-gray-700">Garment:</span>
-      <a href="/garments/<%= product.garment.id %>" class="text-blue-500 hover:underline ">
-        <%= product.garment.name %>
-      </a>
+      <li class="mb-2">
+        <span class="font-semibold text-gray-700">Garment:</span>
+        <% if (product.garment) { %>
+          <a href="/garments/<%= product.garment.id %>" class="text-blue-500 hover:underline">
+            <%= product.garment.name %>
+          </a>
+          <% } else { %>
+            <span class="text-gray-500">No garment assigned</span>
+            <% } %>
+      </li>
+
     </ul>
 
 
