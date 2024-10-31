@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Garment</title>
+</head>
+
+<body class="bg-gray-50 text-gray-800 font-sans">
+  <div class="max-w-5xl mx-auto py-12 px-6">
+    <h1 class="text-4xl font-extrabold mb-8 text-center text-gray-900">
+      Garment
+    </h1>
+    <!-- Pop-up Container -->
+    <div id="popup"
+      class="fixed inset-0 bg-gray-900 bg-opacity-60 flex  hidden items-center opacity-0 justify-center transition-opacity duration-300 ease-in-out">
+      <div
+        class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full transform scale-95 transition-transform duration-300 ease-in-out">
+        <!-- Flash Message Content -->
+        <div class="flash-message">
+          <p class="text-lg text-gray-800 font-semibold">
+            <%= flash_messages %>
+          </p>
+        </div>
+
+        <!-- Close Button -->
+        <div class="mt-4 text-right">
+          <button id="close-popup"
+            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 transition duration-200">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-center mb-8 gap-4">
+      <a href="/garments/create">
+
+        <button
+          class="rounded-lg relative w-56 h-10 cursor-pointer flex items-center border border-green-500 bg-green-500 group hover:bg-green-500 active:bg-green-500 active:border-green-500">
+          <span
+            class="text-white font-semibold ml-8 transform group-hover:translate-x-10 transition-all duration-300">Add
+            Garment</span>
+          <span
+            class="absolute right-0 h-full w-10 rounded-lg bg-green-500 flex items-center justify-center transform group-hover:translate-x-0 group-hover:w-full transition-all duration-300">
+            <svg class="svg w-8 text-white" fill="none" height="24" stroke="currentColor" stroke-linecap="round"
+              stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
+              xmlns="http://www.w3.org/2000/svg">
+              <line x1="12" x2="12" y1="5" y2="19"></line>
+              <line x1="5" x2="19" y1="12" y2="12"></line>
+            </svg>
+          </span>
+        </button>
+
+      </a>
+
+    </div>
+    <!-- Tabel dengan desain baru -->
+    <div class="overflow-x-auto mx-auto">
+      <table class="min-w-full divide-y divide-gray-200 bg-white rounded-lg shadow-md mx-auto">
+        <thead class="bg-gradient-to-r from-blue-500 to-blue-700 text-white">
+          <tr>
+            <th class="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider">Garment Name</th>
+            <th class="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider">Location</th>
+            <th class="px-6 py-3 text-left text-sm font-bold uppercase tracking-wider">Contact</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <% for(let garment of garments) { %>
+            <tr class="hover:bg-gray-100 transition duration-300 ease-in-out">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                <%= garment.name %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <%= garment.location %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm  hover:underline decoration-solid">
+                <a href="/garments/<%= garment._id %>" class="text-blue-600 hover:text-blue-900 ">View Details</a>
+              </td>
+            </tr>
+            <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- Tailwind Classes for showing/hiding -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const flashMessages = "<%= flash_messages %>";
+      const popup = document.getElementById("popup");
+
+      // Check if there is a flash message
+      if (flashMessages.trim() !== "") {
+        popup.classList.remove("hidden");
+
+        // Add smooth fade-in and slide-up animation
+        setTimeout(() => {
+          popup.classList.remove("opacity-0");
+          popup.querySelector(".transform").classList.remove("scale-95");
+        }, 50);
+      }
+
+      // Close button functionality
+      document.getElementById("close-popup").addEventListener("click", function () {
+        // Add fade-out and slide-down animation
+        popup.classList.add("opacity-0");
+        popup.querySelector(".transform").classList.add("scale-95");
+
+        // Hide pop-up after the animation completes
+        setTimeout(() => {
+          popup.classList.add("hidden");
+        }, 300);
+      });
+    });
+  </script>
+</body>
+
+</html>
